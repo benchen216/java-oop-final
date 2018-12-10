@@ -5,8 +5,9 @@ import java.util.*;
 import java.util.regex.*;
 
 public class Main {
+    static int count=0;
     public static void main(String [] argv) throws IOException {
-        FileReader fr = new FileReader("c1908.bench.txt");
+        FileReader fr = new FileReader("c432.bench.txt");
         BufferedReader br = new BufferedReader(fr);
         String myline = "";
         Matcher m;
@@ -14,11 +15,13 @@ public class Main {
         HashSet<String> myInput = new HashSet<String>();
         HashMap <String,String[]> gate = new HashMap<String, String[]>();
 
+
         while ((myline=br.readLine())!=null) {
             m=Pattern.compile("^#").matcher(myline);
             if(m.find())continue;
             m=Pattern.compile("^INPUT\\((.+)\\)").matcher(myline);
             if(m.find()){
+                System.out.println("input "+m.group(1));
                 myInput.add(m.group(1));
                 //System.out.println("input "+myOutput.get(myInput.indexOf(m.group(1))));
                 continue;
@@ -45,6 +48,7 @@ public class Main {
         }
         fr.close();
         while (!myOutput.isEmpty()){
+            count=0;
             //for (String t:gate.get(myOutput.pop())) System.out.println(t);
             System.out.println("\n"+"iii");
             mynode(myOutput.pop(),gate,myInput);
@@ -71,17 +75,21 @@ public class Main {
 
     }
     static void mynode(String mygate,HashMap gate,HashSet myInput){
-        System.out.print("---"+mygate);
+        //System.out.print("---"+mygate+"["+count+"]");
+        count++;
         if(myInput.contains(mygate)){
             //System.out.print("xxx");
+            System.out.print(mygate);
             return;
         }
         String[] tem= (String[]) gate.get(mygate);
-        System.out.println(tem[0]);
+        System.out.print(tem[0]+"(");
         for (int i=1;i<tem.length;i++){
             //System.out.print("---"+tem[i]);
+            //System.out.print("---"+tem[i]+"["+count+"]");
             mynode(tem[i],gate,myInput);
         }
+        System.out.print(")");
 
     }
 }
@@ -105,7 +113,10 @@ class Bench{
     }*/
 }
 class myBench{
-    myBench(){
+    String output;
+    String doaction;
+    String[] input;
+    myBench(String output, String doaction, String[] input){
 
     }
 }
