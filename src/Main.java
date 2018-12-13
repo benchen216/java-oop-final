@@ -7,13 +7,16 @@ import java.util.regex.*;
 public class Main {
     static int count=0;
     public static void main(String [] argv) throws IOException {
-        FileReader fr = new FileReader("c432.bench.txt");
+        FileReader fr = new FileReader("c6288.bench.txt");
         BufferedReader br = new BufferedReader(fr);
         String myline = "";
         Matcher m;
         Stack<String>myOutput = new Stack<String>();
         HashSet<String> myInput = new HashSet<String>();
         HashMap <String,String[]> gate = new HashMap<String, String[]>();
+
+        //
+        LinkedList<MyBench> myBenches = new LinkedList<MyBench>();
 
 
         while ((myline=br.readLine())!=null) {
@@ -51,7 +54,7 @@ public class Main {
             count=0;
             //for (String t:gate.get(myOutput.pop())) System.out.println(t);
             System.out.println("\n"+"iii");
-            mynode(myOutput.pop(),gate,myInput);
+            mynode(myOutput.pop(),gate,myInput,myBenches);
 
         }
 
@@ -74,23 +77,33 @@ public class Main {
         }*/
 
     }
-    static void mynode(String mygate,HashMap gate,HashSet myInput){
+    static class MyBench{
+        String output;
+        String doaction;
+        String[] input;
+        MyBench(String output, String doaction, String[] input){
+
+        }
+    }
+    static void mynode(String mygate,HashMap gate,HashSet myInput,LinkedList myBenches){
         //System.out.print("---"+mygate+"["+count+"]");
+        //@System.out.print("["+count+"]");
         count++;
         if(myInput.contains(mygate)){
             //System.out.print("xxx");
-            System.out.print(mygate);
+            //@System.out.print(mygate);
             return;
         }
         String[] tem= (String[]) gate.get(mygate);
-        System.out.print(tem[0]+"(");
+        //@System.out.print(tem[0]+"(");
+        String [] test={"s","s"};
+        //myBenches.add(new MyBench("test","test",test));
         for (int i=1;i<tem.length;i++){
-            //System.out.print("---"+tem[i]);
+            //System.out.print(tem[i]);
             //System.out.print("---"+tem[i]+"["+count+"]");
-            mynode(tem[i],gate,myInput);
+            mynode(tem[i],gate,myInput,myBenches);
         }
-        System.out.print(")");
-
+        //@System.out.print(")");
     }
 }
 class Bench{
@@ -112,39 +125,8 @@ class Bench{
         fr.close();
     }*/
 }
-class myBench{
-    String output;
-    String doaction;
-    String[] input;
-    myBench(String output, String doaction, String[] input){
 
-    }
-}
-class gates{
-    static int xor(int x,int y){
-        return x^y;
-    }
-    static int and(int[]myinput){
-        int z=1;
-        for (int i:myinput)z=z&i;
-        return z;
-    }
-    static int or(int[]myinput){
-        int z=0;
-        for (int i:myinput)z=z&i;
-        return z;
-    }
-    static int nand(int[]myinput){
-        return not(and(myinput));
-    }
-    static int not(int x){
-        if(x==0)return 1;
-        return 0;
-    }
-    static int nor(int[]myinput){
-        return not(or(myinput));
-    }
-    static int buf(int x){
-        return x;
-    }
+
+class dosome{
+
 }
