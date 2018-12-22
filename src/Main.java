@@ -15,6 +15,9 @@ public class Main {
         //test too
 
         Stack<String>myOutput = new Stack<String>();
+
+        //hashcode srt testing
+
         ArrayList<String> myInput = new ArrayList<>();
         HashMap <String,String[]> gate = new HashMap<String, String[]>();
         HashMap<String,Integer> result = new HashMap<>();
