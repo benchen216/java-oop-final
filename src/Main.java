@@ -12,6 +12,9 @@ public class Main {
         String myline = "";
         Matcher m;
         Stack<String>myOutput = new Stack<String>();
+
+        //hashcode srt testing
+
         ArrayList<String> myInput = new ArrayList<>();
         HashMap <String,String[]> gate = new HashMap<String, String[]>();
         HashMap<String,Integer> result = new HashMap<>();
