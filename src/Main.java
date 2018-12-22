@@ -11,6 +11,9 @@ public class Main {
         BufferedReader br = new BufferedReader(fr);
         String myline = "";
         Matcher m;
+
+        //test too
+
         Stack<String>myOutput = new Stack<String>();
         ArrayList<String> myInput = new ArrayList<>();
         HashMap <String,String[]> gate = new HashMap<String, String[]>();
