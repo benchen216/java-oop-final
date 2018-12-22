@@ -11,9 +11,6 @@ public class Main {
         BufferedReader br = new BufferedReader(fr);
         String myline = "";
         Matcher m;
-
-        //test too
-
         Stack<String>myOutput = new Stack<String>();
 
         //hashcode srt testing
