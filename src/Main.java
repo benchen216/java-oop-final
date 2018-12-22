@@ -6,7 +6,8 @@ public class Main {
     static int count=0;
     public static void main(String [] argv) throws IOException {
         long start = System.currentTimeMillis();
-        FileReader fr = new FileReader("c432.bench.txt");
+        long end = System.currentTimeMillis();
+        FileReader fr = new FileReader("c6288.bench.txt");
         BufferedReader br = new BufferedReader(fr);
         String myline = "";
         Matcher m;
@@ -17,7 +18,6 @@ public class Main {
         ArrayList<String> mytest = new ArrayList<String>();
         HashMap<String,Integer> result = new HashMap<>();
         HashMap<String,Integer> runInput= new HashMap<>();
-
         while ((myline=br.readLine())!=null) {
             m=Pattern.compile("^#").matcher(myline);
             if(m.find())continue;
@@ -49,6 +49,7 @@ public class Main {
             }
         }
         fr.close();
+        ArrayList<String> myInput2 = new ArrayList<>(myInput);
 
 
         //use
@@ -57,8 +58,21 @@ public class Main {
             count=0;
             //for (String t:gate.get(myOutput.pop())) System.out.println(t);
             //System.out.println("\n"+"iii");
-            mynode((String) iterator4.next(),gate,myInput,unorder);
+            mynode((String) iterator4.next(),gate,myInput2,unorder);
 
+            while (!unorder.isEmpty()){
+                String tem = unorder.pop();
+                if(!mytest.contains(tem)) {mytest.add(tem);
+                if(!myInput2.contains(tem)){
+                    myInput2.add(tem);
+                }
+                    //System.out.println(tem);
+                }
+            }
+
+
+            end = System.currentTimeMillis();
+            System.out.println(end - start);
         }
         System.out.println();
         //for(String s : myInput) System.out.print(s + " ");
@@ -66,21 +80,23 @@ public class Main {
         while (iterator.hasNext()){
             System.out.print(iterator.next()+" ");
         }*/
+
         System.out.println();
-        while (!unorder.isEmpty()){
+        /*while (!unorder.isEmpty()){
             String tem = unorder.pop();
             if(!mytest.contains(tem)) {mytest.add(tem);
             //System.out.println(tem);
                 }
-        }
+        }*/
+System.out.println("xxxxxx");
 
-
-
+        end = System.currentTimeMillis();
+        System.out.println(end - start);
 
         //start
-        FileWriter fw=new FileWriter("c432_1m_ans2.txt");
+        FileWriter fw=new FileWriter("c6288_10k_ans2.txt");
         PrintWriter pw=new PrintWriter(fw);
-        FileReader frIp = new FileReader("c432_1m_ip.txt");
+        FileReader frIp = new FileReader("c6288_10k_ip.txt");
         BufferedReader br1 = new BufferedReader(frIp);
         String myline2 = "";
         while ((myline2=br1.readLine())!=null){
@@ -111,11 +127,11 @@ pw.print(myline2);
         }
         pw.close();
         fw.close();
-        long end = System.currentTimeMillis();
+
 
 
         long useTime = end - start;
-        System.out.println(useTime);
+        System.out.println(end - start);
 
 
 
@@ -137,6 +153,7 @@ pw.print(myline2);
     }
 
     static void mynode(String mygate,HashMap gate,ArrayList myInput,Stack unorder){
+        //if(unorder.contains(mygate))return;
         unorder.push(mygate);
         //System.out.print("---"+mygate+"["+count+"]");
         //@System.out.print("["+count+"]");
@@ -157,6 +174,7 @@ pw.print(myline2);
             mynode(tem[i],gate,myInput,unorder);
 
         }
+        //myInput.add(mygate);
         //@System.out.print(")");
     }
     static void inputtoresult(String mytest,HashMap runInput,HashMap result){
