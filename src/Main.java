@@ -7,7 +7,7 @@ public class Main {
     public static void main(String [] argv) throws IOException {
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis();
-        FileReader fr = new FileReader("c6288.bench.txt");
+        FileReader fr = new FileReader("c432.bench.txt");
         BufferedReader br = new BufferedReader(fr);
         String myline = "";
         Matcher m;
@@ -94,9 +94,9 @@ System.out.println("xxxxxx");
         System.out.println(end - start);
 
         //start
-        FileWriter fw=new FileWriter("c6288_10k_ans2.txt");
+        FileWriter fw=new FileWriter("c432_1m_ans2.txt");
         PrintWriter pw=new PrintWriter(fw);
-        FileReader frIp = new FileReader("c6288_10k_ip.txt");
+        FileReader frIp = new FileReader("c432_1m_ip.txt");
         BufferedReader br1 = new BufferedReader(frIp);
         String myline2 = "";
         while ((myline2=br1.readLine())!=null){
@@ -105,7 +105,7 @@ System.out.println("xxxxxx");
             }
             //m=Pattern.compile("").matcher(myline2);
 
-            Iterator iterator2 = mytest.iterator();
+            Iterator iterator2 = myInput2.iterator();
             while (iterator2.hasNext()){
                 //System.out.print(iterator2.next()+" ");
                 String tem2 =(String) iterator2.next();
@@ -174,7 +174,7 @@ pw.print(myline2);
             mynode(tem[i],gate,myInput,unorder);
 
         }
-        //myInput.add(mygate);
+        myInput.add(mygate);
         //@System.out.print(")");
     }
     static void inputtoresult(String mytest,HashMap runInput,HashMap result){
