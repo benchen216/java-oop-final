@@ -5,6 +5,7 @@ import java.util.regex.*;
 public class Main {
     static int count=0;
     public static void main(String [] argv) throws IOException {
+        long start = System.currentTimeMillis();
         FileReader fr = new FileReader("c432.bench.txt");
         BufferedReader br = new BufferedReader(fr);
         String myline = "";
@@ -77,9 +78,9 @@ public class Main {
 
 
         //start
-        FileWriter fw=new FileWriter("c432_1k_ans2.txt");
+        FileWriter fw=new FileWriter("c432_1m_ans2.txt");
         PrintWriter pw=new PrintWriter(fw);
-        FileReader frIp = new FileReader("c432_1k_ip.txt");
+        FileReader frIp = new FileReader("c432_1m_ip.txt");
         BufferedReader br1 = new BufferedReader(frIp);
         String myline2 = "";
         while ((myline2=br1.readLine())!=null){
@@ -110,10 +111,11 @@ pw.print(myline2);
         }
         pw.close();
         fw.close();
+        long end = System.currentTimeMillis();
 
 
-
-
+        long useTime = end - start;
+        System.out.println(useTime);
 
 
 
