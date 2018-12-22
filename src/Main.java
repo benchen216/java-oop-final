@@ -1,30 +1,28 @@
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 
 public class Main {
     static int count=0;
     public static void main(String [] argv) throws IOException {
-        FileReader fr = new FileReader("c6288.bench.txt");
+        FileReader fr = new FileReader("c432.bench.txt");
         BufferedReader br = new BufferedReader(fr);
         String myline = "";
         Matcher m;
         Stack<String>myOutput = new Stack<String>();
-        HashSet<String> myInput = new HashSet<String>();
+        ArrayList<String> myInput = new ArrayList<>();
         HashMap <String,String[]> gate = new HashMap<String, String[]>();
-
-        //
-        LinkedList<MyBench> myBenches = new LinkedList<MyBench>();
-
+        Stack<String> unorder = new Stack<String>();
+        ArrayList<String> mytest = new ArrayList<String>();
+        HashMap<String,Integer> result = new HashMap<>();
+        HashMap<String,Integer> runInput= new HashMap<>();
 
         while ((myline=br.readLine())!=null) {
             m=Pattern.compile("^#").matcher(myline);
             if(m.find())continue;
             m=Pattern.compile("^INPUT\\((.+)\\)").matcher(myline);
             if(m.find()){
-                System.out.println("input "+m.group(1));
+                //System.out.println("input "+m.group(1));
                 myInput.add(m.group(1));
                 //System.out.println("input "+myOutput.get(myInput.indexOf(m.group(1))));
                 continue;
@@ -32,7 +30,7 @@ public class Main {
             m=Pattern.compile("^OUTPUT\\((.+)\\)").matcher(myline);
             if(m.find()){
                 myOutput.add(m.group(1));
-                System.out.println("output "+m.group(1));
+                //System.out.println("output "+m.group(1));
                 continue;
             }
             m=Pattern.compile("(.+)\\s\\=\\s(.+)\\((.+)\\)").matcher(myline);
@@ -41,31 +39,89 @@ public class Main {
                 String[] my = new String[tem.length+1];
                 my[0]=m.group(2);
                 gate.put(m.group(1),my);
-                System.out.print(m.group(1)+"["+m.group(2)+"] ");
+                //System.out.print(m.group(1)+"["+m.group(2)+"] ");
                 for (int i = 1;i<=m.group(3).split(", ").length;i++){
                     my[i]=tem[i-1];
-                    System.out.print(tem[i-1]+" ");
+                    //System.out.print(tem[i-1]+" ");
                 }
-                System.out.println();
+                //System.out.println();
             }
         }
         fr.close();
-        while (!myOutput.isEmpty()){
+
+
+        //use
+        Iterator iterator4 =  myOutput.iterator();
+        while (iterator4.hasNext()){
             count=0;
             //for (String t:gate.get(myOutput.pop())) System.out.println(t);
-            System.out.println("\n"+"iii");
-            mynode(myOutput.pop(),gate,myInput,myBenches);
+            //System.out.println("\n"+"iii");
+            mynode((String) iterator4.next(),gate,myInput,unorder);
 
         }
-
-
+        System.out.println();
         //for(String s : myInput) System.out.print(s + " ");
-        /*Iterator iterator =  myInput.iterator();
+        /*Iterator iterator =  unorder.iterator();
         while (iterator.hasNext()){
             System.out.print(iterator.next()+" ");
+        }*/
+        System.out.println();
+        while (!unorder.isEmpty()){
+            String tem = unorder.pop();
+            if(!mytest.contains(tem)) {mytest.add(tem);
+            //System.out.println(tem);
+                }
         }
 
-        System.out.println();
+
+
+
+        //start
+        FileWriter fw=new FileWriter("c432_1k_ans2.txt");
+        PrintWriter pw=new PrintWriter(fw);
+        FileReader frIp = new FileReader("c432_1k_ip.txt");
+        BufferedReader br1 = new BufferedReader(frIp);
+        String myline2 = "";
+        while ((myline2=br1.readLine())!=null){
+            for (int i=0;i<myline2.length();i++){
+                runInput.put(myInput.get(i), Character.getNumericValue(myline2.charAt(i)));
+            }
+            //m=Pattern.compile("").matcher(myline2);
+
+            Iterator iterator2 = mytest.iterator();
+            while (iterator2.hasNext()){
+                //System.out.print(iterator2.next()+" ");
+                String tem2 =(String) iterator2.next();
+                if(myInput.contains(tem2))inputtoresult(tem2,runInput,result);
+                else mynode2(tem2,gate,result);
+            }
+pw.print(myline2);
+            pw.print(" ");
+            Iterator iterator6 = myOutput.iterator();
+            while (iterator6.hasNext()){
+                //System.out.print(result.get(iterator6.next()));
+                pw.print(result.get(iterator6.next()));
+            }
+            //System.out.println();
+            pw.println();
+
+            runInput.clear();
+            result.clear();
+        }
+        pw.close();
+        fw.close();
+
+
+
+
+
+
+
+
+
+
+
+        /*System.out.println();
         Iterator iter = gate.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry entry = (Map.Entry) iter.next();
@@ -77,15 +133,9 @@ public class Main {
         }*/
 
     }
-    static class MyBench{
-        String output;
-        String doaction;
-        String[] input;
-        MyBench(String output, String doaction, String[] input){
 
-        }
-    }
-    static void mynode(String mygate,HashMap gate,HashSet myInput,LinkedList myBenches){
+    static void mynode(String mygate,HashMap gate,ArrayList myInput,Stack unorder){
+        unorder.push(mygate);
         //System.out.print("---"+mygate+"["+count+"]");
         //@System.out.print("["+count+"]");
         count++;
@@ -96,37 +146,57 @@ public class Main {
         }
         String[] tem= (String[]) gate.get(mygate);
         //@System.out.print(tem[0]+"(");
-        String [] test={"s","s"};
+        //String [] test={"s","s"};
         //myBenches.add(new MyBench("test","test",test));
         for (int i=1;i<tem.length;i++){
             //System.out.print(tem[i]);
+            //
             //System.out.print("---"+tem[i]+"["+count+"]");
-            mynode(tem[i],gate,myInput,myBenches);
+            mynode(tem[i],gate,myInput,unorder);
+
         }
         //@System.out.print(")");
     }
-}
-class Bench{
-    /*public static void read() throws IOException{
-        FileReader fr = new FileReader("c17.bench.txt");
-        BufferedReader br = new BufferedReader(fr);
-        String myline = "";
-        Matcher m;
-        while ((myline=br.readLine())!=null) {
-            m=Pattern.compile("^#").matcher(myline);
-            if(m.find())continue;
-            m=Pattern.compile("^INPUT.+(\\d+).").matcher(myline);
-            if(m.find()) System.out.println("input"+m.group(1));
-            m=Pattern.compile("^OUTPUT.+(\\d+).").matcher(myline);
-            if(m.find()) System.out.println("output"+m.group(1));
-            m=Pattern.compile(".+(\\d+).+\\=.([a-zA-Z]+).+(\\d+).+(\\d+).+").matcher(myline);
-            if(m.find()) System.out.println("ge "+m.group(1)+" gate "+m.group(2)+" g1 "+m.group(3)+" g2 "+m.group(4));
+    static void inputtoresult(String mytest,HashMap runInput,HashMap result){
+        result.put(mytest,runInput.get(mytest));
+    }
+    static void mynode2(String mytest,HashMap gate,HashMap result){
+        //@System.out.print("["+count+"]");
+
+        if(result.containsKey(mytest)){
+            return;
         }
-        fr.close();
-    }*/
-}
+        String[] tem= (String[]) gate.get(mytest);
+        int[] tem2 = new int[tem.length-1];
+        //tem[1]
+        for (int i=1;i<tem.length;i++){
+            tem2[i-1]= (int) result.get(tem[i]);
+        }
 
-
-class dosome{
-
+        switch (tem[0]) {
+            case "nand":
+                result.put(mytest,gates.nand(tem2));
+                break;
+            case "or":
+                result.put(mytest,gates.or(tem2));
+                break;
+            case "nor":
+                result.put(mytest,gates.nor(tem2));
+                break;
+            case "and":
+                result.put(mytest,gates.and(tem2));
+                break;
+            case "xor":
+                result.put(mytest,gates.xor(tem2[0],tem2[1]));
+                break;
+            case "not":
+                result.put(mytest,gates.not(tem2[0]));
+                break;
+            case "buf":
+                result.put(mytest,gates.buf(tem2[0]));
+                break;
+            default:
+                break;
+        }
+    }
 }
