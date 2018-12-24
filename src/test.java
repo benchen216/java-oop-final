@@ -51,7 +51,6 @@ class MyBench{
 
     }
 }
-
 class myTread extends Thread{
     public HashMap<String,Integer> result = new HashMap<>();
     public String out ="";

@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
-
+//import com.sun.management.OperatingSystemMXBean;
 public class Main {
     static int count=0;
     public static void main(String [] argv) throws IOException {
@@ -9,10 +9,10 @@ public class Main {
         long end ;
         FileReader fr = new FileReader("c432.bench.txt");
          BufferedReader br = new BufferedReader(fr);
-        FileWriter fw=new FileWriter("c432_1m_op.txt");
+        FileWriter fw=new FileWriter("c432_10m_op.txt");
         PrintWriter pw=new PrintWriter(fw);
         //BufferedWriter bw = new BufferedWriter(fw);
-        FileReader frIp = new FileReader("c432_1m_ip.txt");
+        FileReader frIp = new FileReader("c432_10m_ip.txt");
         BufferedReader br1 = new BufferedReader(frIp);
         String myline = "";
         Matcher m;
@@ -90,32 +90,65 @@ System.out.println("xxxxxx");
 
         String myline2 = "";
         ArrayList<String> myin = new ArrayList<>();
-/*
+
         while ((myline2=br1.readLine())!=null){
             myin.add(myline2);
         }
         //int [][]result1 = new int[myin.size()][myOutput.size()];
         String[] myout = new String[myin.size()];
-        for(int i=0;i<myin.size();i++){
-            Thread t1=new myTread(myInput2,myin.get(i),myInput,gate,myOutput,myout,i);
-            t1.start();
+        for (String t :myInput) {
+            myInput2.remove(t);
+        }
+        int tem = (int)myin.size()/7;
+        Thread t1=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,0);
+        Thread t2=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*1);
+        Thread t3=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*2);
+        Thread t4=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*3);
+        Thread t5=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*4);
+        Thread t6=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*5);
+        Thread t7=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*6);
+       // Thread t8=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*7);
+        t5.start();
+        t6.start();
+        t7.start();
+        //t8.start();
 
-            /*try {
-                t1.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println(((myTread) t1).out);
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+
+        try {
+            t1.join();
+            //t3.join();
+            //t4.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            t3.join();
+            t4.join();
+            t5.join();
+            t6.join();
+            t7.join();
+           // t8.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         for (int k=0;k<myin.size();k++){
             pw.println(myin.get(k)+" "+myout[k]);
         }
+
         pw.close();
-        fw.close();*/
-        for (String t :myInput) {
-            myInput2.remove(t);
-        }
-       while ((myline2=br1.readLine())!=null){
+        fw.close();
+
+
+       /*while ((myline2=br1.readLine())!=null){
             for (int i=0;i<myline2.length();i++){
                 runInput.put(myInput.get(i), Character.getNumericValue(myline2.charAt(i)));
             }
@@ -144,7 +177,7 @@ System.out.println("xxxxxx");
         }
         pw.close();
        //bw.close();
-       fw.close();
+       fw.close();*/
 
 
         end = System.currentTimeMillis();
@@ -197,4 +230,56 @@ System.out.println("xxxxxx");
     }
 
 
+}
+class myTread2 extends Thread{
+    HashMap<String,Integer> result = new HashMap<>();
+    private HashMap<String,Integer> runInput= new HashMap<>();
+    private String out ="";
+     ArrayList<String> myInput2;
+     ArrayList<String> myin;
+     ArrayList<String> myInput;
+    HashMap<String, String[]> gate;
+     Stack<String> myOutput;
+     int tem, i;
+     String[] myout;
+    StringBuffer sBuffer = new StringBuffer("");
+    myTread2(ArrayList<String> myInput2, ArrayList<String> myin, ArrayList<String> myInput, HashMap<String, String[]> gate, Stack<String> myOutput, String[] myout, int tem, int i){
+        this.myInput2 = myInput2;
+        this.myin = myin;
+        this.myInput = myInput;
+        this.gate = gate;
+        this.myOutput = myOutput;
+        this.tem = tem;
+        this.i = i;
+        this.myout = myout;
+    }
+    @Override
+    public void run(){
+        for (int j=this.i;j<this.tem+this.i;j++){
+            //System.out.println(myin.get(j));
+            for (int z=0;z<myin.get(j).length();z++){
+                this.runInput.put(this.myInput.get(z), Character.getNumericValue(this.myin.get(j).charAt(z)));
+            }
+            for (String t :myInput) {
+                RunNode.inputtoresult(t, runInput, result);
+            }
+            for (String t:myInput2){
+                RunNode.mynode2(t, gate, result);
+            }
+
+
+            for (String k: myOutput){
+                sBuffer.append(result.get(k));
+                //this.out=this.out+result.get(k).toString();
+            }
+            //System.out.println(result);
+            myout[j]=sBuffer.toString();
+            //System.out.println(myout[j]);
+            //this.out;
+            //this.out="";
+            sBuffer=new StringBuffer("");
+            runInput.clear();
+            result.clear();
+        }
+    }
 }
