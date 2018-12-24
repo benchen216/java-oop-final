@@ -3,14 +3,16 @@ class gates{
         return x^y;
     }
     static int and(int[]myinput){
-        int z=1;
-        for (int i:myinput)z=z&i;
-        return z;
+        for (int i:myinput){
+            if(i==0)return 0;
+        }
+        return 1;
     }
     static int or(int[]myinput){
-        int z=0;
-        for (int i:myinput)z=z|i;
-        return z;
+        for (int i:myinput){
+            if(i==1)return 1;
+        }
+        return 0;
     }
     static int nand(int[]myinput){
         return not(and(myinput));

@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
 
 public class test {
 }
@@ -47,5 +49,41 @@ class MyBench{
     String[] input;
     MyBench(String output, String doaction, String[] input){
 
+    }
+}
+
+class myTread extends Thread{
+    public HashMap<String,Integer> result = new HashMap<>();
+    public String out ="";
+    String[] myout;
+    Stack<String> myoutput;
+    ArrayList<String> myInput2;
+    HashMap <String,Integer>runInput = new HashMap<>();
+    ArrayList<String> myInput;
+    HashMap<String,String[]> gate ;
+    int j;
+    myTread(ArrayList myinput2, String myline2, ArrayList myInput, HashMap gate,Stack myoutput,String[] myout,int j){
+        this.myInput2 = myinput2;
+        this.myoutput = myoutput;
+        this.myInput = myInput;
+        this.gate = gate;
+        this.myout = myout;
+        for (int i=0;i<myline2.length();i++){
+            runInput.put((String) myInput.get(i), Character.getNumericValue(myline2.charAt(i)));
+        }
+        this.j=j;
+        this.gate = gate;
+    }
+
+    @Override
+    public void run() {
+        for (String tem2 : myInput2) {
+            if (myInput.contains(tem2)) RunNode.inputtoresult(tem2, runInput, result);
+            else RunNode.mynode2(tem2, gate, result);
+        }
+        for (String i: myoutput){
+            out+=result.get(i);
+        }
+        myout[j]=out;
     }
 }

@@ -7,16 +7,21 @@ public class Main {
     public static void main(String [] argv) throws IOException {
         long start = System.currentTimeMillis();
         long end ;
-        FileReader fr = new FileReader("c432_UX.bench.txt");
-        BufferedReader br = new BufferedReader(fr);
+        FileReader fr = new FileReader("c432.bench.txt");
+         BufferedReader br = new BufferedReader(fr);
+        FileWriter fw=new FileWriter("c433_1m_ans2.txt");
+        //PrintWriter pw=new PrintWriter(fw);
+        BufferedWriter bw = new BufferedWriter(fw);
+        FileReader frIp = new FileReader("c432_1m_ip.txt");
+        BufferedReader br1 = new BufferedReader(frIp);
         String myline = "";
         Matcher m;
-        Stack<String>myOutput = new Stack<String>();
+        Stack<String>myOutput = new Stack<>();
 
         //hashcode srt testing
 
         ArrayList<String> myInput = new ArrayList<>();
-        HashMap <String,String[]> gate = new HashMap<String, String[]>();
+        HashMap <String,String[]> gate = new HashMap<>();
         HashMap<String,Integer> result = new HashMap<>();
         HashMap<String,Integer> runInput= new HashMap<>();
         while ((myline=br.readLine())!=null) {
@@ -82,10 +87,7 @@ System.out.println("xxxxxx");
         System.out.println(end - start);
 
         //start
-        FileWriter fw=new FileWriter("c432_1m_ans2.txt");
-        PrintWriter pw=new PrintWriter(fw);
-        FileReader frIp = new FileReader("c432_1m_ip.txt");
-        BufferedReader br1 = new BufferedReader(frIp);
+
         String myline2 = "";
         ArrayList<String> myin = new ArrayList<>();
 /*
@@ -110,35 +112,44 @@ System.out.println("xxxxxx");
         }
         pw.close();
         fw.close();*/
+        for (String t :myInput) {
+            myInput2.remove(t);
+        }
        while ((myline2=br1.readLine())!=null){
             for (int i=0;i<myline2.length();i++){
                 runInput.put(myInput.get(i), Character.getNumericValue(myline2.charAt(i)));
             }
-
+           for (String t :myInput) {
+               RunNode.inputtoresult(t, runInput, result);
+           }
             for (String tem2 : myInput2) {
                 //System.out.print(iterator2.next()+" ");
-                if (myInput.contains(tem2)) RunNode.inputtoresult(tem2, runInput, result);
-                else RunNode.mynode2(tem2, gate, result);
+                RunNode.mynode2(tem2, gate, result);
             }
-pw.print(myline2);
-            pw.print(" ");
+            bw.write(myline2);
+            //pw.print(myline2);
+           bw.write(" ");
+           //pw.print(" ");
             for (String s : myOutput) {
                 //System.out.print(result.get(iterator6.next()));
-                pw.print(result.get(s));
+                //pw.print(result.get(s));
+                bw.write(result.get(s));
             }
             //System.out.println();
-            pw.println();
+           bw.newLine();
+            //pw.println();
 
             runInput.clear();
             result.clear();
         }
-        pw.close();
-        fw.close();
+        //pw.close();
+       bw.close();
+       fw.close();
 
 
         end = System.currentTimeMillis();
         long useTime = end - start;
-        System.out.println(end - start);
+        System.out.printf("Total time=%.3f sec(s)\n",(end - start)/1000.0);
 
 
 
@@ -159,7 +170,7 @@ pw.print(myline2);
 
     }
 
-    static void mynode(String mygate,HashMap gate,ArrayList myInput){
+    static void mynode(String mygate,HashMap gate,ArrayList<String> myInput){
         //if(unorder.contains(mygate))return;
 
         //System.out.print("---"+mygate+"["+count+"]");
@@ -186,39 +197,4 @@ pw.print(myline2);
     }
 
 
-}
-class myTread extends Thread{
-    public HashMap<String,Integer> result = new HashMap<>();
-    public String out ="";
-    String[] myout;
-    Stack<String> myoutput;
-    ArrayList<String> myInput2;
-    HashMap <String,Integer>runInput = new HashMap<>();
-    ArrayList<String> myInput;
-    HashMap<String,String[]> gate ;
-    int j;
-    myTread(ArrayList myinput2, String myline2, ArrayList myInput, HashMap gate,Stack myoutput,String[] myout,int j){
-        this.myInput2 = myinput2;
-        this.myoutput = myoutput;
-        this.myInput = myInput;
-        this.gate = gate;
-        this.myout = myout;
-        for (int i=0;i<myline2.length();i++){
-            runInput.put((String) myInput.get(i), Character.getNumericValue(myline2.charAt(i)));
-        }
-this.j=j;
-        this.gate = gate;
-    }
-
-    @Override
-    public void run() {
-        for (String tem2 : myInput2) {
-            if (myInput.contains(tem2)) RunNode.inputtoresult(tem2, runInput, result);
-            else RunNode.mynode2(tem2, gate, result);
-        }
-        for (String i: myoutput){
-            out+=result.get(i);
-        }
-        myout[j]=out;
-    }
 }

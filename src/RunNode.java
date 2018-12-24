@@ -4,12 +4,12 @@ public class RunNode {
     static void inputtoresult(String mytest,HashMap runInput,HashMap result){
         result.put(mytest,runInput.get(mytest));
     }
-    static void mynode2(String mytest, HashMap gate, HashMap result){
+    static void mynode2(String mytest, HashMap gate, HashMap<String,Integer> result){
         //@System.out.print("["+count+"]");
 
-        if(result.containsKey(mytest)){
+        /*if(result.containsKey(mytest)){
             return;
-        }
+        }*/
         String[] tem= (String[]) gate.get(mytest);
         int[] tem2 = new int[tem.length-1];
         //tem[1]
