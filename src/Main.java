@@ -9,9 +9,9 @@ public class Main {
         long end ;
         FileReader fr = new FileReader("c432.bench.txt");
          BufferedReader br = new BufferedReader(fr);
-        FileWriter fw=new FileWriter("c433_1m_ans2.txt");
-        //PrintWriter pw=new PrintWriter(fw);
-        BufferedWriter bw = new BufferedWriter(fw);
+        FileWriter fw=new FileWriter("c432_1m_op.txt");
+        PrintWriter pw=new PrintWriter(fw);
+        //BufferedWriter bw = new BufferedWriter(fw);
         FileReader frIp = new FileReader("c432_1m_ip.txt");
         BufferedReader br1 = new BufferedReader(frIp);
         String myline = "";
@@ -126,24 +126,24 @@ System.out.println("xxxxxx");
                 //System.out.print(iterator2.next()+" ");
                 RunNode.mynode2(tem2, gate, result);
             }
-            bw.write(myline2);
-            //pw.print(myline2);
-           bw.write(" ");
-           //pw.print(" ");
+            //bw.write(myline2);
+            pw.print(myline2);
+           //bw.write(" ");
+           pw.print(" ");
             for (String s : myOutput) {
                 //System.out.print(result.get(iterator6.next()));
-                //pw.print(result.get(s));
-                bw.write(result.get(s));
+                pw.print(result.get(s));
+                //bw.write(result.get(s));
             }
             //System.out.println();
-           bw.newLine();
-            //pw.println();
+           //bw.newLine();
+            pw.println();
 
             runInput.clear();
             result.clear();
         }
-        //pw.close();
-       bw.close();
+        pw.close();
+       //bw.close();
        fw.close();
 
 
