@@ -88,7 +88,7 @@ System.out.println("xxxxxx");
         BufferedReader br1 = new BufferedReader(frIp);
         String myline2 = "";
         ArrayList<String> myin = new ArrayList<>();
-
+/*
         while ((myline2=br1.readLine())!=null){
             myin.add(myline2);
         }
@@ -103,21 +103,21 @@ System.out.println("xxxxxx");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println(((myTread) t1).out);*/
+            System.out.println(((myTread) t1).out);
         }
         for (int k=0;k<myin.size();k++){
             pw.println(myin.get(k)+" "+myout[k]);
         }
         pw.close();
-        fw.close();
-      /*  while ((myline2=br1.readLine())!=null){
+        fw.close();*/
+       while ((myline2=br1.readLine())!=null){
             for (int i=0;i<myline2.length();i++){
                 runInput.put(myInput.get(i), Character.getNumericValue(myline2.charAt(i)));
             }
 
             for (String tem2 : myInput2) {
                 //System.out.print(iterator2.next()+" ");
-                if (myInput.contains(tem2)) inputtoresult(tem2, runInput, result);
+                if (myInput.contains(tem2)) RunNode.inputtoresult(tem2, runInput, result);
                 else RunNode.mynode2(tem2, gate, result);
             }
 pw.print(myline2);
@@ -134,7 +134,7 @@ pw.print(myline2);
         }
         pw.close();
         fw.close();
-*/
+
 
         end = System.currentTimeMillis();
         long useTime = end - start;
