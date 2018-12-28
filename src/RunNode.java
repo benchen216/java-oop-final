@@ -1,20 +1,14 @@
 import java.util.HashMap;
 
 public class RunNode {
-    static void inputtoresult(String mytest,HashMap runInput,HashMap result){
+    static void inputtoresult(String mytest,HashMap<String,Integer> runInput,HashMap<String,Integer>  result){
         result.put(mytest,runInput.get(mytest));
     }
     static void mynode2(String mytest, HashMap gate, HashMap<String,Integer> result){
-        //@System.out.print("["+count+"]");
-
-        /*if(result.containsKey(mytest)){
-            return;
-        }*/
         String[] tem= (String[]) gate.get(mytest);
         int[] tem2 = new int[tem.length-1];
-        //count[1]
         for (int i=1;i<tem.length;i++){
-            tem2[i-1]= (int) result.get(tem[i]);
+            tem2[i-1]=  result.get(tem[i]);
         }
 
         switch (tem[0]) {

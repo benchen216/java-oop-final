@@ -2,13 +2,13 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 public class Main {
-    static int count=0;
     public static void main(String [] argv) throws IOException, InterruptedException {
         long start = System.currentTimeMillis();
         long end ;
          BufferedReader bench_br = new BufferedReader(new FileReader("c432.bench.txt"));
-        PrintWriter pw=new PrintWriter(new FileWriter("c432_10m_op.txt"));
-        BufferedReader br1 = new BufferedReader(new FileReader("c432_10m_ip.txt"));
+        PrintWriter pw=new PrintWriter(new FileWriter("c432_1m_op.txt"));
+        BufferedReader br1 = new BufferedReader(new FileReader("c432_1m_ip.txt"));
+
         String myline = "";
         Matcher m;
         Stack<String>myOutput = new Stack<>();
@@ -45,7 +45,6 @@ public class Main {
         //use
         Iterator iterator4 =  myOutput.iterator();
         while (iterator4.hasNext()){
-            count=0;
             mynode((String) iterator4.next(),gate,myInput2);
         }
         String myline2 ="";
@@ -108,7 +107,6 @@ public class Main {
     }
 
     static void mynode(String mygate,HashMap gate,ArrayList<String> myInput){
-        count++;
         if(myInput.contains(mygate)){
             return;
         }
@@ -127,16 +125,16 @@ class myTread2 extends Thread{
  String out ="";
      ArrayList<String> myInput2;
      ArrayList<String> myin;
-     ArrayList<String> myInput;
+     String[] myInput;
     HashMap<String, String[]> gate;
      Stack<String> myOutput;
      int count, end;
      String[] myout;
-    StringBuffer sBuffer = new StringBuffer("");
+    StringBuffer sBuffer = new StringBuffer();
     myTread2(ArrayList<String> myInput2, ArrayList<String> myin, ArrayList<String> myInput, HashMap<String, String[]> gate, Stack<String> myOutput, String[] myout, int count, int end){
         this.myInput2 = myInput2;
         this.myin = myin;
-        this.myInput = myInput;
+        this.myInput = myInput.toArray(new String[0]);
         this.gate = gate;
         this.myOutput = myOutput;
         this.count = count;
@@ -147,7 +145,7 @@ class myTread2 extends Thread{
     public void run(){
         for (int j = this.end; j<this.count +this.end; j++){
             for (int z=0;z<myin.get(j).length();z++){
-                this.runInput.put(this.myInput.get(z), Character.getNumericValue(this.myin.get(j).charAt(z)));
+                this.runInput.put(this.myInput[z], Character.getNumericValue(this.myin.get(j).charAt(z)));
             }
             for (String t :myInput) {
                 RunNode.inputtoresult(t, runInput, result);
@@ -159,7 +157,7 @@ class myTread2 extends Thread{
                 sBuffer.append(result.get(k));
             }
             myout[j]=sBuffer.toString();
-            sBuffer=new StringBuffer("");
+            sBuffer=new StringBuffer();
             runInput.clear();
             result.clear();
         }
