@@ -12,7 +12,7 @@ public class RunNode {
         }*/
         String[] tem= (String[]) gate.get(mytest);
         int[] tem2 = new int[tem.length-1];
-        //tem[1]
+        //count[1]
         for (int i=1;i<tem.length;i++){
             tem2[i-1]= (int) result.get(tem[i]);
         }
