@@ -6,8 +6,8 @@ public class Main {
         long start = System.currentTimeMillis();
         long end ;
          BufferedReader bench_br = new BufferedReader(new FileReader("c432.bench.txt"));
-        PrintWriter pw=new PrintWriter(new FileWriter("c432_1m_op.txt"));
-        BufferedReader br1 = new BufferedReader(new FileReader("c432_1m_ip.txt"));
+        PrintWriter pw=new PrintWriter(new FileWriter("c432_10m_op.txt"));
+        BufferedReader br1 = new BufferedReader(new FileReader("c432_10m_ip.txt"));
 
         String myline = "";
         Matcher m;
@@ -59,37 +59,29 @@ public class Main {
             myInput2.remove(t);
         }
 
-        int tem = (int)myin.size()/4;
-        Thread t1=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,0);
+
+        /*Thread t1=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,0);
         Thread t2=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem, tem);
         Thread t3=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*2);
         Thread t4=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*3);
         t1.start();
         t2.start();
         t3.start();
-        t4.start();
+        t4.start();*/
 
 
-        /*int threadNo= 4;
-        Thread threads[] = new Thread[threadNo];
+        int threadNo= 5;
+        int tem = myin.size()/threadNo;
+        Thread[] threads = new Thread[threadNo];
         for (int i=0;i<threadNo;i++){
-            threads = new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*i);
+            threads[i] = new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*i);
+            threads[i].start();
         }
-
         for (Thread i:threads){
             i.join();
-        }*/
+        }
 
 
-
-            t1.join();
-
-
-            t2.join();
-
-            t3.join();
-
-            t4.join();
 
 
         for (int k=0;k<myin.size();++k){
@@ -99,7 +91,7 @@ public class Main {
         pw.close();
 
         end = System.currentTimeMillis();
-        long useTime = end - start;
+        //long useTime = end - start;
         System.out.printf("Total time=%.3f sec(s)\n",(end - start)/1000.0);
 
 
@@ -120,12 +112,11 @@ public class Main {
 
 }
 class myTread2 extends Thread{
-    HashMap<String,Integer> result = new HashMap<>();
- HashMap<String,Integer> runInput= new HashMap<>();
- String out ="";
+    private HashMap<String,Integer> result = new HashMap<>();
+ private HashMap<String,Integer> runInput= new HashMap<>();
      ArrayList<String> myInput2;
      ArrayList<String> myin;
-     String[] myInput;
+     ArrayList<String> myInput;
     HashMap<String, String[]> gate;
      Stack<String> myOutput;
      int count, end;
@@ -134,7 +125,7 @@ class myTread2 extends Thread{
     myTread2(ArrayList<String> myInput2, ArrayList<String> myin, ArrayList<String> myInput, HashMap<String, String[]> gate, Stack<String> myOutput, String[] myout, int count, int end){
         this.myInput2 = myInput2;
         this.myin = myin;
-        this.myInput = myInput.toArray(new String[0]);
+        this.myInput = myInput;
         this.gate = gate;
         this.myOutput = myOutput;
         this.count = count;
@@ -145,7 +136,7 @@ class myTread2 extends Thread{
     public void run(){
         for (int j = this.end; j<this.count +this.end; j++){
             for (int z=0;z<myin.get(j).length();z++){
-                this.runInput.put(this.myInput[z], Character.getNumericValue(this.myin.get(j).charAt(z)));
+                this.runInput.put(this.myInput.get(z), Character.getNumericValue(this.myin.get(j).charAt(z)));
             }
             for (String t :myInput) {
                 RunNode.inputtoresult(t, runInput, result);
