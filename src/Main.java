@@ -1,23 +1,39 @@
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.*;
 public class Main {
+
+    static gateinter and = new myand();
+    static gateinter or = new myor();
+    static gateinter xor = new myxor();
+    static gateinter not = new mynot();
+    static gateinter buf = new mybuf();
+    static gateinter nor = new mynor();
+    static gateinter nand = new mynand();
     public static void main(String [] argv) throws IOException, InterruptedException {
-        String[] bench={"C432","C499","C880","C1355","C1908","C2670","C3540","C5315","C6288","C7552"};
-        String[] inN = {"1k","10k","100k"};
-        for(String b:bench) {
-            for (String kc : inN) {
+        //String[] bench={"C432","C499","C880","C1355","C1908","C2670","C3540","C5315","C6288","C7552"};
+        //String[] inN = {"1k","10k","100k"};
+        //for(String b:bench) {
+        //    for (String kc : inN) {
+        //BufferedReader bench_br = new BufferedReader(new FileReader(b + ".bench.txt"));
+        //PrintWriter pw = new PrintWriter(new FileWriter(b + "_"+kc+"_op.txt"));
+        //BufferedReader br1 = new BufferedReader(new FileReader(b + "_"+kc+"_ip.txt"));
                 long start = System.currentTimeMillis();
                 long end;
-                BufferedReader bench_br = new BufferedReader(new FileReader(b + ".bench.txt"));
-                PrintWriter pw = new PrintWriter(new FileWriter(b + "_"+kc+"_op.txt"));
-                BufferedReader br1 = new BufferedReader(new FileReader(b + "_"+kc+"_ip.txt"));
 
+
+        BufferedReader bench_br = new BufferedReader(new FileReader("c432.bench.txt"));
+        PrintWriter pw = new PrintWriter(new FileWriter("c432_10m_op.txt"));
+        BufferedReader br1 = new BufferedReader(new FileReader("c432_10m_ip.txt"));
                 String myline = "";
                 Matcher m;
+
                 Stack<String> myOutput = new Stack<>();
                 ArrayList<String> myInput = new ArrayList<>();
                 HashMap<String, String[]> gate = new HashMap<>();
+                HashMap<String, gateinter> gate2 = new HashMap<>();
                 while ((myline = bench_br.readLine()) != null) {
                     m = Pattern.compile("^#").matcher(myline);
                     if (m.find()) continue;
@@ -45,7 +61,6 @@ public class Main {
                 bench_br.close();
                 ArrayList<String> myInput2 = new ArrayList<>(myInput);
 
-
                 //use
                 Iterator iterator4 = myOutput.iterator();
                 while (iterator4.hasNext()) {
@@ -63,28 +78,56 @@ public class Main {
                     myInput2.remove(t);
                 }
 
+        for(String t:gate.keySet()){
+            String c = gate.get(t)[0];
+            switch (c) {
+                case "nand":
+                    gate2.put(t,nand);
+                    break;
+                case "or":
+                    gate2.put(t,or);
+                    break;
+                case "nor":
+                    gate2.put(t,nor);
+                    break;
+                case "and":
+                    gate2.put(t,and);
+                    break;
+                case "xor":
+                    gate2.put(t,xor);
+                    break;
+                case "not":
+                    gate2.put(t,not);
+                    break;
+                case "buf":
+                    gate2.put(t,buf);
+                    break;
+                default:
+                    break;
+            }
 
-        /*Thread t1=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,0);
-        Thread t2=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem, tem);
-        Thread t3=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*2);
-        Thread t4=new myTread2(myInput2,myin,myInput,gate,myOutput,myout,tem,tem*3);
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();*/
+           // System.out.println(Arrays.toString(gate2.get(t)));
+        }
+                /*
+                HashMap<String,Object[]> gate2 = new HashMap<>();
+                for(String t:gate.keySet()){
+                    gate2.put(t,)
+                }
 
 
-                int threadNo = 5;
+*/
+
+        //Object t = mynode3;
+                int threadNo = 1;
                 int tem = myin.size() / threadNo;
                 Thread[] threads = new Thread[threadNo];
                 for (int i = 0; i < threadNo; i++) {
-                    threads[i] = new myTread2(myInput2, myin, myInput, gate, myOutput, myout, tem, tem * i);
+                    threads[i] = new myTread2(myInput2, myin, myInput, gate, myOutput, myout, tem, tem * i,gate2);
                     threads[i].start();
                 }
                 for (Thread i : threads) {
                     i.join();
                 }
-
 
                 for (int k = 0; k < myin.size(); ++k) {
                     pw.println(myin.get(k) + " " + myout[k]);
@@ -93,13 +136,12 @@ public class Main {
                 pw.close();
 
                 end = System.currentTimeMillis();
-                //long useTime = end - start;
-                //System.out.printf("Total time=%.3f sec(s)\n", (end - start) / 1000.0);
-                System.out.print((end - start) / 1000.0);
-                System.out.print(",");
-            }
-            System.out.println(b);
-        }
+                System.out.printf("Total time=%.3f sec(s)\n", (end - start) / 1000.0);
+                //System.out.print((end - start) / 1000.0);
+                //System.out.print(",");
+           // }
+         //   System.out.println(b);
+       // }
 
     }
 
@@ -113,10 +155,12 @@ public class Main {
         }
         myInput.add(mygate);
     }
+    static void mynode3(String tem){
 
-
+    }
 }
 class myTread2 extends Thread{
+
     private HashMap<String,Integer> result = new HashMap<>();
  private HashMap<String,Integer> runInput= new HashMap<>();
      ArrayList<String> myInput2;
@@ -125,9 +169,11 @@ class myTread2 extends Thread{
     HashMap<String, String[]> gate;
      Stack<String> myOutput;
      int count, end;
+    HashMap<String,gateinter> gate2;
      String[] myout;
     StringBuffer sBuffer = new StringBuffer();
-    myTread2(ArrayList<String> myInput2, ArrayList<String> myin, ArrayList<String> myInput, HashMap<String, String[]> gate, Stack<String> myOutput, String[] myout, int count, int end){
+    myTread2(ArrayList<String> myInput2, ArrayList<String> myin, ArrayList<String> myInput, HashMap<String,
+            String[]> gate, Stack<String> myOutput, String[] myout, int count, int end,HashMap<String,gateinter> gate2){
         this.myInput2 = myInput2;
         this.myin = myin;
         this.myInput = myInput;
@@ -136,6 +182,7 @@ class myTread2 extends Thread{
         this.count = count;
         this.end = end;
         this.myout = myout;
+       this.gate2 = gate2;
     }
     @Override
     public void run(){
@@ -147,7 +194,7 @@ class myTread2 extends Thread{
                 RunNode.inputtoresult(t, runInput, result);
             }
             for (String t:myInput2){
-                RunNode.mynode2(t, gate, result);
+                RunNode.mynode2(t, gate, result,gate2);
             }
             for (String k: myOutput){
                 sBuffer.append(result.get(k));
@@ -159,3 +206,54 @@ class myTread2 extends Thread{
         }
     }
 }
+class  myor implements gateinter{
+    public int dogate(int[] x) {
+        for (int i:x){
+            if(i==1)return 1;
+        }
+        return 0;
+    }
+}
+class myand implements gateinter{
+
+    public int dogate(int[] x) {
+        for (int i:x){
+            if(i==0)return 0;
+        }
+        return 1;
+    }
+}
+class myxor implements gateinter{
+    public int dogate(int[] x) {
+        return x[0]^x[1];
+    }
+}
+class mynot implements gateinter{
+    public int dogate(int[] x) {
+        return x[0]==0?1:0;
+    }
+}
+class mynand implements gateinter{
+    public int dogate(int[] x) {
+        for (int i:x){
+            if(i==0)return 1;
+        }
+return 0;
+    }
+}
+class mybuf implements gateinter{
+
+    public int dogate(int[] x) {
+        return x[0];
+    }
+}
+class mynor implements gateinter{
+
+    public int dogate(int[] x) {
+        for (int i:x){
+            if(i==1)return 0;
+        }
+return 1;
+    }
+}
+

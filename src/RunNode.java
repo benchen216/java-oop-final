@@ -4,14 +4,17 @@ public class RunNode {
     static void inputtoresult(String mytest,HashMap<String,Integer> runInput,HashMap<String,Integer>  result){
         result.put(mytest,runInput.get(mytest));
     }
-    static void mynode2(String mytest, HashMap gate, HashMap<String,Integer> result){
+    static void mynode2(String mytest, HashMap gate, HashMap<String,Integer> result,HashMap<String,gateinter> gate2){
         String[] tem= (String[]) gate.get(mytest);
         int[] tem2 = new int[tem.length-1];
         for (int i=1;i<tem.length;i++){
             tem2[i-1]=  result.get(tem[i]);
         }
+       // System.out.println(gate2.get(mytest));
+        //System.out.println(gate2.get(mytest)[0].dogate(tem2));
+        result.put(mytest,gate2.get(mytest).dogate(tem2));
 
-        switch (tem[0]) {
+        /*switch (tem[0]) {
             case "nand":
                 result.put(mytest,gates.nand(tem2));
                 break;
@@ -35,6 +38,6 @@ public class RunNode {
                 break;
             default:
                 break;
-        }
+        }*/
     }
 }

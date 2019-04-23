@@ -14,7 +14,7 @@ class gates{
         }
         return 0;
     }
-    static int nand(int[]myinput){
+    public static int nand(int[]myinput){
         return not(and(myinput));
     }
     static int not(int x){
